@@ -22,15 +22,12 @@ Cores principais:
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    height: 1000px;
 }
 
-.container h1 {
+ h1 {
     text-align: center;
-    margin: 0 auto;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     color: #012e40;
 }
 
@@ -45,27 +42,18 @@ Cores principais:
 .icon {
     color: #71f26d;
     height: 40px;
-    width: 45px;
-    padding: 3px;
-    margin-top: 100px;
-    border-radius: 5px;
 }
 
-.user-fixo {
-    background-color: #012e40;
-    border-radius: 50%;
-    padding: 15px;
-    z-index: 1;
-    margin-bottom: -75px;
+.ladoEsquerdo {
+    width: 450px;
+    height: 350px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
 
-.icon-fixo {
-    color: #71f26d;
-}
-
-.formulario {
+.ladoDireito {
     border: none;
-    margin: 0 auto;
     width: 450px;
     height: 350px;
     border-radius: 20px;
@@ -78,19 +66,14 @@ Cores principais:
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.748);
 }
 
-.formulario input {
+.ladoDireito input {
     width: 100%;
-    height: 40px;
-    margin-top: 100px;
     margin-left: 5px;
-    line-height: 50px;
-    background-color: white;
-    border-radius: 7px;
-    border: none;
+    border-radius: 10px;
+    border: 3px solid #71f26d;
 }
 
-.formulario button {
-    margin-top: 45px;
+.ladoDireito button {
     width: 150px;
     height: 40px;
     font-size: 1em;
@@ -100,12 +83,13 @@ Cores principais:
     box-shadow: inset 2px 2px 5px 0px rgba(0, 0, 0, 0.615);
     text-transform: uppercase;
     color: #012e40;
-    background-color: #71f26d;
+    background-color: #71F26D;
+    
     font-weight: bold;
+    margin-top: 20px;
 }
 
-.formulario button:hover {
-    margin-top: 45px;
+.ladoDireito button:hover {
     width: 150px;
     height: 40px;
     font-size: 1em;
@@ -114,8 +98,10 @@ Cores principais:
     border: none;
     box-shadow: inset 2px 2px 5px 0px rgba(0, 0, 0, 0.615);
     text-transform: uppercase;
-    color: black;
-    background-color: #3a8c4e;
+    color: #71F26D;
+    background-color: #012e40;
+    border: 1px solid #71F26D;
+    margin-top: 20px;
 }
 
 .teste {

@@ -6,12 +6,36 @@
 }
 
 .header {
-    background-color: lightgrey;
+    background-color: #1fad2b;
     box-shadow: 4px 4px 5px gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .header img {
     width: 100px;
     padding: 5px;
     cursor: pointer;
+
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 24px;
+    width: 100%;
+}
+
+.menu a {
+    color: black;
+}
+
+.menu a:hover {
+    border-bottom: 1px solid white;
+}
+
+.menu a + a {
+    margin-left: 10px;
 }
