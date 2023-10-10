@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "../styles/login.css";
 import { BiSolidLock, BiUser } from "react-icons/bi";
+import { Link } from 'react-router-dom'
 
 import Header from "../components/Header";
+import Footer from '../components/Footer'
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -16,7 +18,6 @@ function Login() {
   return (
     <>
       <Header />
-      <h1>Pocket Plus</h1>
       <div className="container">
         <div className="ladoEsquerdo">
           <img src="/logo.png" width={"400px"} alt="logo do projeto" />
@@ -41,19 +42,20 @@ function Login() {
             />
           </div>
           <br />
-          <div className="teste">
-            <div className="teste2">
+          <div className="inputs">
+            <div className="input">
               <input type="checkbox" />
               <p>Lembrar-me</p>
             </div>
             <div className="teste2">
-              <a href="index.html">Esqueceu sua senha?</a>
+              <Link to="/pages/Cadastro">Primeiro acesso? Clique aqui</Link>
             </div>
           </div>
 
           <button onClick={handleTeste}>Entrar</button>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

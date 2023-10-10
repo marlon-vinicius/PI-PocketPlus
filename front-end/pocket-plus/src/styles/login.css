@@ -22,13 +22,7 @@ Cores principais:
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
- h1 {
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    color: #012e40;
+    margin-top: 50px;
 }
 
 .container-input {
@@ -104,16 +98,16 @@ Cores principais:
     margin-top: 20px;
 }
 
-.teste {
+.inputs {
     margin-top: 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-    width: 75%;
+    width: 100%;
 }
 
-.teste2 {
+.input {
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -123,23 +117,23 @@ Cores principais:
     text-shadow: white;
 }
 
-.teste2 input {
+.input input {
     width: 18px;
     margin: 0 auto;
     padding: 5px;
     margin-right: 3px;
 }
 
-.teste2 p {
+.input p {
     margin-left: 5px;
 }
 
-.teste2 a {
+.input a {
     text-decoration: none;
     color: #71f26d;
 }
 
-.teste2 a:hover {
+.input a:hover {
     text-decoration: none;
     color: #71f26d;
     border-bottom: 1px solid #71f26d;
