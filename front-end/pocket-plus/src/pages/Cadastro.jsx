@@ -44,7 +44,7 @@ function Cadastro() {
           <input
             type="text"
             placeholder="Profissão:"
-            value={nome}
+            value={profissao}
             onChange={(e) => setProfissao(e.target.value)}
           />
         </div>
