@@ -8,13 +8,6 @@ function Footer() {
         <p>Copyright 2023 - All Rights Reserved</p>
         </div>
 
-        <div className="conteudo-footer">
-        <p>Copyright 2023 - All Rights Reserved</p>
-        </div>
-
-        <div className="conteudo-footer">
-        <p>Copyright 2023 - All Rights Reserved</p>
-        </div>
     </div>
   );
 }
