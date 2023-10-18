@@ -1,18 +1,14 @@
-import express, { json, urlencoded } from "express";
-import cookieParser from "cookie-parser";
-import logger from "morgan";
-
-import indexRouter from "./routes/index.js";
-import usersRouter from "./routes/users.js";
-
+const express = require('express');
 const app = express();
+const { PrismaClient } = require('@prisma/client-mongodb');
+const prisma = new PrismaClient();
 
-app.use(logger("dev"));
-app.use(json());
-app.use(urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(express.json());
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
+const usuarioRoutes = require('./routes/usuarioRoutes');
 
-export default app;
+app.use(usuarioRoutes);
+
+app.listen(3000, () => {
+  console.log('Servidor rodando na porta 3000');
+});
