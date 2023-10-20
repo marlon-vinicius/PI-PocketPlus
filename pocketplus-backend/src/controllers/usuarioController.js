@@ -1,29 +1,33 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+import prisma from '../database/client.js';
 
 const criarUsuario = async (req, res) => {
   try {
-    const { nome, cpf, email, senha } = req.body;
-    const usuario = await prisma.usuario.create({
+    const { nome, profissao, valor, email, senha } = req.body;
+
+    const usuarioExistente = await prisma.user.findUnique({
+      where: { email: email },
+    });
+
+    if (usuarioExistente) {
+      return res.status(400).json({ error: 'E-mail já está em uso.' });
+    }
+
+    const newUser = await prisma.user.create({
       data: {
         nome,
-        cpf,
+        profissao,
         email,
         senha,
       },
     });
-    res.json(usuario);
+
+    res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao criar usuário' });
+    console.error('Erro no registro:', error);
+    res.status(500).json({ error: 'Erro no servidor.' });
   }
 };
 
-const listarUsuarios = async (req, res) => {
-  const usuarios = await prisma.usuario.findMany();
-  res.json(usuarios);
-};
-
-module.exports = {
-  criarUsuario,
-  listarUsuarios,
+export default {
+  criarUsuario
 };

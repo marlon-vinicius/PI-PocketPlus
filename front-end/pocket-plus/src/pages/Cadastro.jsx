@@ -2,24 +2,34 @@ import Header from "../components/Header";
 import Footer from '../components/Footer'
 import React, { useState } from "react";
 import "../styles/cadastro.css";
-import CurrencyInput from '../CurrencyInput'
+//import CurrencyInput from '../CurrencyInput'
 import { BiSolidLock, BiUser } from "react-icons/bi";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdWorkOutline } from 'react-icons/md'
-import { MdOutlineAttachMoney } from 'react-icons/md'
+//import { MdOutlineAttachMoney } from 'react-icons/md'
  
 function Cadastro() {
   const [nome, setNome] = useState("");
   const [profissao, setProfissao] = useState("");
-  const [valor, setValor] = useState('')
+  // const [valor, setValor] = useState('')
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   function handleRegister() {
-    console.log(nome);
-    console.log(profissao);
-    console.log(email);
-    console.log(senha);
+    fetch('/usuario/registrar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ nome, profissao, email, senha }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Usuário registrado com sucesso:', data);
+      })
+      .catch((error) => {
+        console.error('Erro no registro:', error);
+      });
   }
 
   return (
@@ -50,7 +60,7 @@ function Cadastro() {
         </div>
         <br />
 
-        <div className="formulario-input">
+        {/* <div className="formulario-input">
         <MdOutlineAttachMoney className="icon" size={30} />
         <CurrencyInput 
               placeholder="R$ 0,00" 
@@ -58,7 +68,7 @@ function Cadastro() {
               value={valor}
               onChange={(e) => setValor(e.target.value)}
               /> 
-        </div>
+        </div> */}
         <br />
       
         <div className="formulario-input">
