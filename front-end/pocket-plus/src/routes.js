@@ -10,10 +10,10 @@ function RoutesApp() {
     return(
         <BrowserRouter>
             <Routes>
-                <Route path="/pages/Login" element={ <Login /> } />
-                <Route path="/pages/Cadastro" element={ <Cadastro /> } />
-                <Route path="/pages/Home" element={ <Home /> } />
-                <Route path="/pages/Relatorio" element={ <Relatorio /> } />
+                <Route path="/" element={ <Login /> } />
+                <Route path="/cadastro" element={ <Cadastro /> } />
+                <Route path="/home" element={ <Home /> } />
+                <Route path="/relatorio" element={ <Relatorio /> } />
 
                 <Route path="/*" element={ <Error /> } />
             </Routes>

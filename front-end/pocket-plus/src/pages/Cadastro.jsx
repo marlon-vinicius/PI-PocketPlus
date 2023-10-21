@@ -9,27 +9,39 @@ import { MdWorkOutline } from 'react-icons/md'
 //import { MdOutlineAttachMoney } from 'react-icons/md'
  
 function Cadastro() {
-  const [nome, setNome] = useState("");
-  const [profissao, setProfissao] = useState("");
-  // const [valor, setValor] = useState('')
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [formData, setFormData] = useState({
+    nome: '',
+    profissao: '',
+    email: '',
+    senha: '',
+  });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-  function handleRegister() {
-    fetch('/usuario/registrar', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ nome, profissao, email, senha }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Usuário registrado com sucesso:', data);
-      })
-      .catch((error) => {
-        console.error('Erro no registro:', error);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+
+      if (response.status === 201) {
+        alert('Registration successful!');
+      } else {
+        const data = await response.json();
+        alert(`Registration failed: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Registration failed. Please try again later.');
+    }
   }
 
   return (
@@ -37,64 +49,58 @@ function Cadastro() {
 
       <Header />
       <h1>Preencha os campos abaixo</h1>
-      <div className="formulario">
-        <div className="formulario-input">
-          <BiUser className="icon" size={30} />
-          <input
-            type="text"
-            placeholder="Nome:"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-          />
-        </div>
-        <br />
-
-        <div className="formulario-input">
-          <MdWorkOutline className="icon" size={30} />
-          <input
-            type="text"
-            placeholder="Profissão:"
-            value={profissao}
-            onChange={(e) => setProfissao(e.target.value)}
-          />
-        </div>
-        <br />
-
-        {/* <div className="formulario-input">
-        <MdOutlineAttachMoney className="icon" size={30} />
-        <CurrencyInput 
-              placeholder="R$ 0,00" 
+      <form onSubmit={handleSubmit}>
+        <div className="formulario">
+          <div className="formulario-input">
+            <BiUser className="icon" size={30} />
+            <input
               type="text"
-              value={valor}
-              onChange={(e) => setValor(e.target.value)}
-              /> 
-        </div> */}
-        <br />
-      
-        <div className="formulario-input">
-          <HiOutlineMail className="icon" size={30} />
-          <input
-            type="email"
-            placeholder="Email:"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <br />
+              name="nome"
+              placeholder="Nome:"
+              value={formData.nome}
+              onChange={handleInputChange}
+            />
+          </div>
+          <br />
 
-        <div className="formulario-input">
-          <BiSolidLock className="icon" size={30} />
-          <input
-            type="password"
-            placeholder="Senha:"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
-        </div>
-        <br />
+          <div className="formulario-input">
+            <MdWorkOutline className="icon" size={30} />
+            <input
+              type="text"
+              name="profissao"
+              placeholder="Profissão:"
+              value={formData.profissao}
+              onChange={handleInputChange}
+            />
+          </div>
+          <br />      
+          <div className="formulario-input">
+            <HiOutlineMail className="icon" size={30} />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email:"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+          </div>
+          <br />
 
-        <button onClick={handleRegister}>Registrar</button>
-      </div>
+          <div className="formulario-input">
+            <BiSolidLock className="icon" size={30} />
+            <input
+              type="password"
+              name="senha"
+              placeholder="Senha:"
+              value={formData.senha}
+              onChange={handleInputChange}
+            />
+          </div>
+          <br />
+          <button type="submit">Registrar</button>
+        </div>          
+      </form>
+
       <Footer />
     </>
   );

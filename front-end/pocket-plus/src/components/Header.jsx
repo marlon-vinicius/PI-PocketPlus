@@ -9,10 +9,9 @@ function Header() {
         <img src="/logo.png" alt="logo" />
 
         <div className="menu">
-          <Link to="/pages/Login">Login</Link>
-          <Link to="/pages/Cadastro">Cadastro</Link>
-          <Link to="/pages/Home">Home</Link>
-          <Link to="/pages/Relatorio">Relatório</Link>
+          <Link to="/cadastro">Cadastro</Link>
+          <Link to="/home">Home</Link>
+          <Link to="/relatorio">Relatório</Link>
         </div>
       </div>
     </div>

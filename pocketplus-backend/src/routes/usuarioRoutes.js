@@ -1,7 +1,8 @@
 import { Router } from "express";
-const router = Router();
-import usuarioController from '../controllers/usuarioController';
+import usuarioController from '../controllers/usuarioController.js';
 
-router.post('/registrar', usuarioController.criarUsuario);
+const router = Router();
+
+router.post('/', usuarioController.criarUsuario);
 
 export default router;

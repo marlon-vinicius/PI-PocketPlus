@@ -1,3 +1,5 @@
+// Executar `npx prisma generate` toda vez que modificar o schema
+
 generator client {
   provider = "prisma-client-js"
 }
