@@ -7,6 +7,7 @@ import { BiSolidLock, BiUser } from "react-icons/bi";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdWorkOutline } from 'react-icons/md'
 //import { MdOutlineAttachMoney } from 'react-icons/md'
+import { toast } from 'react-toastify'
  
 function Cadastro() {
   const [formData, setFormData] = useState({
@@ -24,7 +25,8 @@ function Cadastro() {
     e.preventDefault();
 
     try {
-      const response = await fetch('/', {
+      const response = await fetch('http://localhost:5000/usuario', {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,13 +35,14 @@ function Cadastro() {
       });
 
       if (response.status === 201) {
-        alert('Registration successful!');
+        toast.success('Registration successful!');
       } else {
         const data = await response.json();
-        alert(`Registration failed: ${data.error}`);
+        toast.warning(`Registration failed: ${data.error}`);
       }
     } catch (error) {
-      console.error('Registration error:', error);
+      console.log('Registration error:', error);
+      console.log(formData);
       alert('Registration failed. Please try again later.');
     }
   }

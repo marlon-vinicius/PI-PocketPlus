@@ -9,11 +9,17 @@ function Home() {
   const [data, setData] = useState("");
   const [valor, setValor] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [tipo, setTipo] = useState("");
 
   function handleLancamento() {
+
     console.log(data);
     console.log(valor);
     console.log(descricao);
+    console.log(categoria);
+    console.log(tipo);
+    
   }
 
   return (
@@ -46,17 +52,29 @@ function Home() {
               /> 
               <div className="debito-credito">
                 <div>
-                  <input type="radio" id="debito" value="debito" />
+                  <input 
+                  type="radio"
+                  id="debito"
+                  name="tipo"
+                  value="debito"
+                  onChange={(e) => setTipo(e.target.value)}
+                  />
                   <label for="debito">Débito</label>
                 </div>
                 <div>
-                  <input type="radio" id="credito" value="credito" />
+                  <input 
+                  type="radio" 
+                  id="credito"
+                  name="tipo"
+                  value="credito"
+                  onChange={(e) => setTipo(e.target.value)}
+                  />
                   <label for="credito">Crédito</label>
                 </div>
               </div>
 
-              <select>
-                <option value="">Categoria</option>
+              <select onChange={(e) => setCategoria(e.target.value)}>
+                <option value="" >Categoria</option>
                 <option value="moradia">Moradia</option>
                 <option value="alimentacao">Alimentação</option>
                 <option value="saude">Saúde</option>

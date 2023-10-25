@@ -48,7 +48,7 @@ function Login() {
               <p>Lembrar-me</p>
             </div>
             <div className="teste2">
-              <Link to="/pages/Cadastro">Primeiro acesso? Clique aqui</Link>
+              <Link to="/Cadastro">Primeiro acesso? Clique aqui</Link>
             </div>
           </div>
 
