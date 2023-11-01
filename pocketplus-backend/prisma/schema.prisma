@@ -9,6 +9,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Categoria {
+  Moradia
+  Alimentacao
+  Lazer
+  Transporte
+  Saude
+}
+
 model Usuario {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId
   nome            String
@@ -16,24 +24,17 @@ model Usuario {
   email           String         @unique
   senha           String
   transacaoIds    String[]       @db.ObjectId
-  transacoes      Transacao[]
-}
-
-model Categoria {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  nome            String
-  transacoes      Transacao[]
+  // transacoes      Transacao[]
 }
 
 model Transacao {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  usuarioId       String         @db.ObjectId
-  usuario         Usuario        @relation(fields: [usuarioId], references: [id])
-  categoriaId     String         @db.ObjectId
-  categoria       Categoria?     @relation(fields: [categoriaId], references: [id])
+ // usuarioId       String         @db.ObjectId
+ // usuario         Usuario        @relation(fields: [usuarioId], references: [id])
+  //categoriaId     String         @db.ObjectId
+  categoria       Categoria
   tipo            String
   descricao       String?
-  valor           Float
-  data            DateTime     
+  valor           Int
+  data            String     
 }
-

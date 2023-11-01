@@ -2,24 +2,59 @@ import React, { useState } from 'react'
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import CurrencyInput from '../CurrencyInput'
+import { toast } from 'react-toastify'
 import "../styles/home.css";
 
 function Home() {
+  const [transacaoData, setTransacaoData] = useState({
+    data: '',
+    valor: '',
+    tipo: '',
+    categoria: '',
+    descricao: ''
+  });
 
-  const [data, setData] = useState("");
-  const [valor, setValor] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [categoria, setCategoria] = useState("");
-  const [tipo, setTipo] = useState("");
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
 
-  function handleLancamento() {
+    setTransacaoData({ ...transacaoData, [name]: value });
+      
+  };
 
-    console.log(data);
-    console.log(valor);
-    console.log(descricao);
-    console.log(categoria);
-    console.log(tipo);
-    
+  const handleLancamento = async (e) => {
+    e.preventDefault();
+
+    const valorFloat = parseFloat(transacaoData.valor);
+
+    if((valorFloat)) {
+      setTransacaoData({ ...transacaoData, valor: valorFloat });
+    }
+
+    console.log(transacaoData);
+    console.log(valorFloat);
+
+    try {
+      const response = await fetch('http://localhost:5000/transacao', {
+
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: 
+            JSON.parse(transacaoData)
+      });
+
+      if (response.status === 201) {
+        toast.success('Transação cadastrada com sucesso!');
+      } else {
+        const data = await response.json();
+        toast.warning(`Ops, tivemos um problema: ${data.error}`);
+      }
+    } catch (error) {
+      console.log('Registration error:', error);
+      console.log(transacaoData);
+      toast.warning('Falha no sistema!');
+    }
   }
 
   return (
@@ -41,14 +76,16 @@ function Home() {
           <div className="painel-principal">
             <div className="painel1">
               <input type="date"
-              value={data}
-              onChange={(e) => setData(e.target.value)}
+              name='data'
+              value={transacaoData.data}
+              onChange={handleInputChange}
               />
               <CurrencyInput 
               placeholder="R$ 0,00" 
               type="text"
-              value={valor}
-              onChange={(e) => setValor(e.target.value)}
+              name='valor'
+              value={transacaoData.valor}
+              onChange={handleInputChange}
               /> 
               <div className="debito-credito">
                 <div>
@@ -56,8 +93,9 @@ function Home() {
                   type="radio"
                   id="debito"
                   name="tipo"
-                  value="debito"
-                  onChange={(e) => setTipo(e.target.value)}
+                  value="Débito"
+                  checked={transacaoData.tipo === "Débito"}
+                  onChange={handleInputChange}
                   />
                   <label for="debito">Débito</label>
                 </div>
@@ -66,28 +104,33 @@ function Home() {
                   type="radio" 
                   id="credito"
                   name="tipo"
-                  value="credito"
-                  onChange={(e) => setTipo(e.target.value)}
+                  value="Crédito"
+                  checked={transacaoData.tipo === "Crédito"}
+                  onChange={handleInputChange}
                   />
                   <label for="credito">Crédito</label>
                 </div>
               </div>
 
-              <select onChange={(e) => setCategoria(e.target.value)}>
+              <select
+              name='categoria'
+              value={transacaoData.categoria}
+              onChange={handleInputChange}>
                 <option value="" >Categoria</option>
-                <option value="moradia">Moradia</option>
-                <option value="alimentacao">Alimentação</option>
-                <option value="saude">Saúde</option>
-                <option value="transporte">Transporte</option>
-                <option value="lazer">Lazer</option>
+                <option value={"Moradia"}>Moradia</option>
+                <option value={"Alimentacao"}>Alimentação</option>
+                <option value={"Saude"}>Saúde</option>
+                <option value={"Transporte"}>Transporte</option>
+                <option value={"Lazer"}>Lazer</option>
               </select>
             </div>
 
             <div className="painel2">
-              <input type="text" 
+              <input type="text"
+              name='descricao'
               placeholder="Descrição" 
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
+              value={transacaoData.descricao}
+              onChange={handleInputChange}
               />
               <button onClick={handleLancamento}>Salvar</button>
             </div>
