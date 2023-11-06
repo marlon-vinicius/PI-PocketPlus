@@ -168,6 +168,7 @@ function Home() {
                   <th>Data</th>
                   <th>Categoria</th>
                   <th>Tipo</th>
+                  <th>Descrição</th>
                   <th>Valor</th>
                 </tr>
                 {transacoes.map((item) => (
@@ -175,6 +176,7 @@ function Home() {
                     <td>{item.data.substring(8,10) + '/' + item.data.substring(5,7) + '/' + item.data.substring(0,4)}</td>
                     <td>{item.categoria}</td>
                     <td>{item.tipo}</td>
+                    <td>{item.descricao}</td>
                     <td>{"R$ " + item.valor}</td>
                   </tr>
                 ))}

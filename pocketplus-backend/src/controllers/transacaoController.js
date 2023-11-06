@@ -72,7 +72,7 @@ controller.todas = async function(req, res) {
 controller.filtradas = async function(req, res) {
   try {
     const result = await prisma.transacao.findMany({
-      where: { usuarioId: req.usuario.user_id, categoria: req.body.categoria },
+      where: { usuarioId: req.usuario.user_id, categoria: req.body },
       orderBy: { data: 'desc' }
 
     })

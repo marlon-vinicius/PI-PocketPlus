@@ -5,8 +5,8 @@ import "../styles/relatorio.css";
 import { toast } from "react-toastify";
 
 function Relatorio() {
-
   const [transacoes, setTransacoes] = useState([]);
+  const [valor, setValor] = useState(0);
 
   const carregarTodosLancamentos = async () => {
     const response = await fetch("http://localhost:5000/transacao/todas", {
@@ -18,7 +18,15 @@ function Relatorio() {
     });
 
     if (response.status === 200) {
+      let valorDespesas = 0;
+
       const retorno = await response.json();
+
+      retorno.map((val) => {
+        return setValor(valorDespesas += val.valor);
+      });
+
+      
       return setTransacoes(retorno);
     } else {
       const data = await response.json();
@@ -48,30 +56,30 @@ function Relatorio() {
     <>
       <Header />
       <div style={{ display: "flex" }}>
-        <Sidebar />
+        <Sidebar valor={valor} />
         <div className="pai">
           <h2>Histórico de Lançamentos</h2>
 
-        <div className="select">Filtrar por:
-        <br />
-        <br />
-
-        <select>
-                <option value="">Categoria</option>
-                <option value="Moradia">Moradia</option>
-                <option value="Alimentacao">Alimentação</option>
-                <option value="Saude">Saúde</option>
-                <option value="Transporte">Transporte</option>
-                <option value="Lazer">Lazer</option>
-              </select>
-
-              <button onClick={carregarTodosLancamentos}>Carregar Todas</button>
-              <button onClick={carregarFiltrados}>Carregar Filtrados</button>
-
-        </div>
+          <div className="pesquisa">
+            Filtrar por:
+            <br />
+            <br />
+            <select>
+              <option value="">Categoria</option>
+              <option value="Moradia">Moradia</option>
+              <option value="Alimentacao">Alimentação</option>
+              <option value="Saude">Saúde</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Lazer">Lazer</option>
+            </select>
+          </div>
+          <div className="botoes">
+            <button onClick={carregarTodosLancamentos}>Carregar Todos</button>
+            <button onClick={carregarFiltrados}>Carregar Filtrados</button>
+          </div>
 
           <div className="painel">
-          <div>
+            <div>
               <table>
                 <tr>
                   <th>Data</th>
@@ -80,9 +88,15 @@ function Relatorio() {
                   <th>Descrição</th>
                   <th>Valor</th>
                 </tr>
-                {transacoes.map((item) => (
-                  <tr>
-                    <td>{item.data.substring(8,10) + '/' + item.data.substring(5,7) + '/' + item.data.substring(0,4)}</td>
+                {transacoes.map((item, index) => (
+                  <tr key={index}>
+                    <td>
+                      {item.data.substring(8, 10) +
+                        "/" +
+                        item.data.substring(5, 7) +
+                        "/" +
+                        item.data.substring(0, 4)}
+                    </td>
                     <td>{item.categoria}</td>
                     <td>{item.tipo}</td>
                     <td>{item.descricao}</td>

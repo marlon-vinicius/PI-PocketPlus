@@ -7,6 +7,20 @@ h2 {
     text-align: center;
 }
 
+.pesquisa {
+    display: inline;
+    width: 35%;
+    padding: 10px;
+}
+
+.botoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .painel {
     width: 80%;
     height: auto;
@@ -31,4 +45,31 @@ table td {
     color:blue;
     border-bottom: 1px solid black;
     padding: 3px;
+}
+
+button {
+    width: 150px;
+    height: 40px;
+    font-size: 1em;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    box-shadow: inset 2px 2px 5px 0px rgba(0, 0, 0, 0.615);
+    text-transform: uppercase;
+    color: #71F26D;
+    background-color: #012e40;
+    font-weight: bold;
+}
+
+button:hover {
+    width: 150px;
+    height: 40px;
+    font-size: 1em;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    box-shadow: inset 2px 2px 5px 0px rgba(0, 0, 0, 0.615);
+    text-transform: uppercase;
+    color: black;
+    background-color: #71F26D;
 }

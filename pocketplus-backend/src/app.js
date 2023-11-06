@@ -19,10 +19,11 @@ app.listen(5000, () => {
 import publicaRouter from './routes/publicaRoutes.js';
 import transacaoRouter from './routes/transacaoRoutes.js';
 import usuarioRouter from './routes/usuarioRoutes.js';
+import valorRouter from './routes/valorRoutes.js'
 
 app.use("/", publicaRouter);
 app.use("/transacao", transacaoRouter);
 app.use("/usuario", usuarioRouter);
-
+app.use("/despesas", valorRouter);
 
 export default app;

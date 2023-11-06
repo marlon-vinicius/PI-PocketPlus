@@ -25,7 +25,7 @@ function Cadastro() {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/usuario', {
+      const response = await fetch('http://localhost:5000/registrar', {
 
         method: 'POST',
         headers: {
@@ -35,15 +35,15 @@ function Cadastro() {
       });
 
       if (response.status === 201) {
-        toast.success('Registration successful!');
+        toast.success('Cadastro realizado com sucesso!');
       } else {
         const data = await response.json();
-        toast.warning(`Registration failed: ${data.error}`);
+        toast.warning(`Falha ao cadastrar: ${data.error}`);
       }
     } catch (error) {
-      console.log('Registration error:', error);
+      console.log(error);
       console.log(formData);
-      alert('Registration failed. Please try again later.');
+      toast.warning('Falha ao cadastrar, tente novamente mais tarde!');
     }
   }
 

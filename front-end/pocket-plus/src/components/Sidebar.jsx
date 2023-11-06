@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 import "../styles/sidebar.css";
 import { useNavigate } from "react-router-dom";
 
-function Sidebar() {
+function Sidebar({...props}) {
   const nav = useNavigate();
   async function logout(e) {
     e.preventDefault();
-  
+
     window.sessionStorage.clear();
-    nav('/');
+    nav("/");
   }
 
   return (
@@ -19,7 +19,7 @@ function Sidebar() {
             <Link to="/Home">Home</Link>
           </li>
           <li>
-          <Link to="/Relatorio">Relatório</Link>
+            <Link to="/Relatorio">Relatório</Link>
           </li>
         </ul>
       </nav>
@@ -30,14 +30,16 @@ function Sidebar() {
             <p>Ganhos</p>
           </li>
           <li>
-            <p>Despesas</p>
+            <p>{props.valor}</p>
           </li>
           <li>
             <p>Total</p>
           </li>
-          <hr/>
+          <hr />
           <li>
-            <p><button onClick={logout}>Logout</button></p>
+            <p>
+              <button onClick={logout}>Logout</button>
+            </p>
           </li>
         </ul>
       </nav>
