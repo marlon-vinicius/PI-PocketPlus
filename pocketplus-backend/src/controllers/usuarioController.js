@@ -2,31 +2,23 @@ import prisma from '../database/client.js';
 
 const controller = {};
 
-controller.criarUsuario = async function (req, res) {
-  try {
-    const { nome, profissao, email, senha } = req.body;
-    const usuarioExistente = await prisma.usuario.findUnique({
-      where: { email: email },
-    });
+controller.porId = async function (req,res){
+  
+  const id = req.params.id;
 
-    if (usuarioExistente) {
-      return res.status(400).json({ error: 'E-mail já está em uso.' });
-    }
-
-    await prisma.usuario.create({
-      data: {
-        nome,
-        profissao,
-        email,
-        senha,
-      },
-    });
-
-    res.status(201).json({ message: 'Usuário cadastrado com sucesso' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+  if ((!id)) {
+    return res.status(400).send("O ID fornecido não é válido");
   }
-};
+
+   const usuario = await prisma.usuario.findUnique({
+     where: { id: id },
+   });
+
+   if(!usuario){
+    return res.status(401).json({ error: 'Usuário não identificado.' });
+   }
+
+   return res.status(200).json({usuario});
+}
 
 export default controller;

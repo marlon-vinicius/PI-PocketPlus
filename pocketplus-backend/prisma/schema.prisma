@@ -18,23 +18,21 @@ enum Categoria {
 }
 
 model Usuario {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  nome            String
-  profissao       String         
-  email           String         @unique
-  senha           String
-  transacaoIds    String[]       @db.ObjectId
-  // transacoes      Transacao[]
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  nome       String
+  profissao  String
+  email      String      @unique
+  senha      String
+  transacoes Transacao[]
 }
 
 model Transacao {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId
- // usuarioId       String         @db.ObjectId
- // usuario         Usuario        @relation(fields: [usuarioId], references: [id])
-  //categoriaId     String         @db.ObjectId
-  categoria       Categoria
-  tipo            String
-  descricao       String?
-  valor           Int
-  data            String     
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  categoria Categoria
+  tipo      String
+  descricao String?
+  valor     Float
+  data      String
+  usuarioId String    @db.ObjectId
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
 }

@@ -16,11 +16,13 @@ app.listen(5000, () => {
   console.log('Servidor rodando na porta 5000');
 });
 
-import usuarioRouter from './routes/usuarioRoutes.js';
-app.use("/usuario", usuarioRouter);
-
+import publicaRouter from './routes/publicaRoutes.js';
 import transacaoRouter from './routes/transacaoRoutes.js';
+import usuarioRouter from './routes/usuarioRoutes.js';
+
+app.use("/", publicaRouter);
 app.use("/transacao", transacaoRouter);
+app.use("/usuario", usuarioRouter);
 
 
 export default app;

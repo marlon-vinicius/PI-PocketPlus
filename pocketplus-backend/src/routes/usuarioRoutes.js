@@ -1,8 +1,9 @@
 import { Router } from "express";
 import usuarioController from '../controllers/usuarioController.js';
+import auth from '../middleware/auth.js';
 
 const router = Router();
 
-router.post('/', usuarioController.criarUsuario);
+router.get('/id/:id', auth, usuarioController.porId);
 
 export default router;

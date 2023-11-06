@@ -1,8 +1,49 @@
+import { useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import "../styles/relatorio.css";
+import { toast } from "react-toastify";
 
 function Relatorio() {
+
+  const [transacoes, setTransacoes] = useState([]);
+
+  const carregarTodosLancamentos = async () => {
+    const response = await fetch("http://localhost:5000/transacao/todas", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: window.sessionStorage.getItem("token"),
+      },
+    });
+
+    if (response.status === 200) {
+      const retorno = await response.json();
+      return setTransacoes(retorno);
+    } else {
+      const data = await response.json();
+      toast.warning(`Ops, tivemos um problema: ${data.error}`);
+    }
+  };
+
+  const carregarFiltrados = async () => {
+    const response = await fetch("http://localhost:5000/transacao/filtradas", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: window.sessionStorage.getItem("token"),
+      },
+    });
+
+    if (response.status === 200) {
+      const retorno = await response.json();
+      return setTransacoes(retorno);
+    } else {
+      const data = await response.json();
+      toast.warning(`Ops, tivemos um problema: ${data.error}`);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -17,23 +58,39 @@ function Relatorio() {
 
         <select>
                 <option value="">Categoria</option>
-                <option value="moradia">Moradia</option>
-                <option value="alimentacao">Alimentação</option>
-                <option value="saude">Saúde</option>
-                <option value="transporte">Transporte</option>
-                <option value="lazer">Lazer</option>
+                <option value="Moradia">Moradia</option>
+                <option value="Alimentacao">Alimentação</option>
+                <option value="Saude">Saúde</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Lazer">Lazer</option>
               </select>
+
+              <button onClick={carregarTodosLancamentos}>Carregar Todas</button>
+              <button onClick={carregarFiltrados}>Carregar Filtrados</button>
 
         </div>
 
           <div className="painel">
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente aut commodi sint dolore veniam doloremque nesciunt voluptatum earum dolorum, ratione magnam quo unde praesentium ea iusto provident et? Molestiae, facere.</p>
-          <br />
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente aut commodi sint dolore veniam doloremque nesciunt voluptatum earum dolorum, ratione magnam quo unde praesentium ea iusto provident et? Molestiae, facere.</p>
-          <br />
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente aut commodi sint dolore veniam doloremque nesciunt voluptatum earum dolorum, ratione magnam quo unde praesentium ea iusto provident et? Molestiae, facere.</p>
-          <br />
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente aut commodi sint dolore veniam doloremque nesciunt voluptatum earum dolorum, ratione magnam quo unde praesentium ea iusto provident et? Molestiae, facere.</p>
+          <div>
+              <table>
+                <tr>
+                  <th>Data</th>
+                  <th>Categoria</th>
+                  <th>Tipo</th>
+                  <th>Descrição</th>
+                  <th>Valor</th>
+                </tr>
+                {transacoes.map((item) => (
+                  <tr>
+                    <td>{item.data.substring(8,10) + '/' + item.data.substring(5,7) + '/' + item.data.substring(0,4)}</td>
+                    <td>{item.categoria}</td>
+                    <td>{item.tipo}</td>
+                    <td>{item.descricao}</td>
+                    <td>{"R$ " + item.valor}</td>
+                  </tr>
+                ))}
+              </table>
+            </div>
           </div>
         </div>
       </div>

@@ -33,13 +33,13 @@ CurrencyInput.defaultProps = {
 CurrencyInput.propTypes = {
   inputmode: PropTypes.number,
   maskOptions: PropTypes.shape({
-    prefix: PropTypes.string,
-    suffix: PropTypes.string,
+    prefix: PropTypes.number,
+    suffix: PropTypes.number,
     includeThousandsSeparator: PropTypes.bool,
-    thousandsSeparatorSymbol: PropTypes.string,
+    thousandsSeparatorSymbol: PropTypes.number,
     allowDecimal: PropTypes.bool,
-    decimalSymbol: PropTypes.string,
-    decimalLimit: PropTypes.string,
+    decimalSymbol: PropTypes.number,
+    decimalLimit: PropTypes.number,
     requireDecimal: PropTypes.bool,
     allowNegative: PropTypes.bool,
     allowLeadingZeroes: PropTypes.bool,

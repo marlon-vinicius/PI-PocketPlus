@@ -27,7 +27,7 @@ h2 {
 
 .painel-secundario {
     width: 80%;
-    height: 250px;
+    height: auto;
     border: 1px solid gray;
     border-radius: 20px;
     padding: 10px;
