@@ -1,4 +1,5 @@
 import prisma from '../database/client.js';
+import { toast } from "react-toastify";
 
 const controller = {};
 
@@ -71,23 +72,31 @@ controller.todas = async function(req, res) {
 
 controller.filtradas = async function(req, res) {
   try {
+    const categoriaSelecionada = req.query.categoria;
+    if (!categoriaSelecionada || categoriaSelecionada == "") {
+      res.status(400).send("Categoria não especificada");
+      return;
+    }
+
     const result = await prisma.transacao.findMany({
-      where: { usuarioId: req.usuario.user_id, categoria: req.body },
-      orderBy: { data: 'desc' }
+      where: {
+        usuarioId: req.usuario.user_id,
+        categoria: categoriaSelecionada,
+      },
+      orderBy: { data: 'desc' },
+    });
 
-    })
-
-    if(result) res.send(result)
-
-    else res.status(404).end()
+    if (result.length > 0) {
+      res.send(result);
+    } else {
+      toast.error(`Nenhum dado correspondente encontrado para a categoria selecionada.`);
+      res.status(404);
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error(`Erro ao processar a solicitação.`);
+    res.status(500).send(error);
   }
-  
-  catch(error) {
-
-    console.error(error)
-
-    res.status(500).send(error)
-  }
-}
+};
 
 export default controller;

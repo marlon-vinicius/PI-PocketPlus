@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 function Relatorio() {
   const [transacoes, setTransacoes] = useState([]);
   const [valor, setValor] = useState(0);
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState("Moradia");
 
   const carregarTodosLancamentos = async () => {
     const response = await fetch("http://localhost:5000/transacao/todas", {
@@ -34,18 +35,29 @@ function Relatorio() {
     }
   };
 
+  const handleSelecionarCategoria = (e) => {
+    setCategoriaSelecionada(e.target.value);
+  };
+
   const carregarFiltrados = async () => {
-    const response = await fetch("http://localhost:5000/transacao/filtradas", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: window.sessionStorage.getItem("token"),
-      },
-    });
+    setTransacoes([]);
+    const response = await fetch(
+      `http://localhost:5000/transacao/filtradas?categoria=${categoriaSelecionada}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: window.sessionStorage.getItem("token"),
+        },
+      }
+    );
 
     if (response.status === 200) {
       const retorno = await response.json();
-      return setTransacoes(retorno);
+      if (retorno === 0) {
+        toast.warning(`Nenhum dado correspondente encontrado.`);
+      }
+      setTransacoes(retorno);
     } else {
       const data = await response.json();
       toast.warning(`Ops, tivemos um problema: ${data.error}`);
@@ -64,7 +76,7 @@ function Relatorio() {
             Filtrar por:
             <br />
             <br />
-            <select>
+            <select value={categoriaSelecionada} onChange={handleSelecionarCategoria}>
               <option value="">Categoria</option>
               <option value="Moradia">Moradia</option>
               <option value="Alimentacao">Alimentação</option>
