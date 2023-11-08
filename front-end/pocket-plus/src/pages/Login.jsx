@@ -3,7 +3,6 @@ import "../styles/login.css";
 import { BiSolidLock, BiUser } from "react-icons/bi";
 import { Link } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
-
 import Header from "../components/Header";
 import Footer from '../components/Footer'
 import { toast } from 'react-toastify'
@@ -40,7 +39,7 @@ function Login() {
         window.sessionStorage.setItem('codigoUsuario',retorno.usuario);
         window.sessionStorage.setItem('token',retorno.token);
         toast.success('Login concluído com sucesso!');
-        nav('/home');
+        nav('/dashboard');
       } else {
         const data = await response.json();
         toast.warning(`Falha ao efetuar o login: ${data.error}`);
@@ -63,6 +62,7 @@ function Login() {
             <BiUser className="icon" size={30} />
             <input
               type="email"
+              placeholder="E-mail:"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -73,6 +73,7 @@ function Login() {
             <BiSolidLock className="icon" size={30} />
             <input
               type="password"
+              placeholder="Senha:"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               onKeyDown ={handleKeyPress}

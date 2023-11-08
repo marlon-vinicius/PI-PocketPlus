@@ -8,8 +8,10 @@ import { HiOutlineMail } from "react-icons/hi";
 import { MdWorkOutline } from 'react-icons/md'
 //import { MdOutlineAttachMoney } from 'react-icons/md'
 import { toast } from 'react-toastify'
+import { useNavigate } from "react-router-dom";
  
 function Cadastro() {
+  const nav = useNavigate();
   const [formData, setFormData] = useState({
     nome: '',
     profissao: '',
@@ -36,6 +38,7 @@ function Cadastro() {
 
       if (response.status === 201) {
         toast.success('Cadastro realizado com sucesso!');
+        nav('/');
       } else {
         const data = await response.json();
         toast.warning(`Falha ao cadastrar: ${data.error}`);

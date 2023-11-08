@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { toast } from "react-toastify";
-import "../styles/home.css";
+import "../styles/despesa.css";
 
-function Home() {
+function Despesa() {
   const [transacaoData, setTransacaoData] = useState({
     data: "",
     valor: "",
@@ -52,7 +52,11 @@ function Home() {
         body: JSON.stringify(transacaoData),
       });
 
-      console.log(transacaoData);
+      if(transacaoData.valor < 0) {
+        toast.warning("O valor digitado não pode ser negativo!");
+
+        return;
+      }
 
       if (response.status === 201) {
         toast.success("Transação cadastrada com sucesso!");
@@ -62,7 +66,6 @@ function Home() {
       }
     } catch (error) {
       console.log("Registration error:", error);
-      console.log(transacaoData);
       toast.warning("Falha no sistema!");
     }
   };
@@ -92,7 +95,7 @@ function Home() {
                 onChange={handleInputChange}
               />
               <input
-                type="number"
+                type='number'
                 placeholder="R$ 0,00"
                 name="valor"
                 value={transacaoData.valor}
@@ -146,7 +149,7 @@ function Home() {
                 onChange={handleInputChange}
               />
               <button onClick={handleLancamento}>Salvar</button>
-              <button onClick={carregarLancamentos}>Carregar</button>
+              
             </div>
           </div>
 
@@ -183,10 +186,11 @@ function Home() {
               </table>
             </div>
           </div>
+          <button onClick={carregarLancamentos}>Carregar</button>
         </div>
       </div>
     </>
   );
 }
 
-export default Home;
+export default Despesa;
