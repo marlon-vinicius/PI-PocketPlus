@@ -7,7 +7,30 @@
 }
 
 h2 {
-    text-align: center;
+    text-align: right;
+}
+
+.dashboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    margin: 50px;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 60%;
+    height: 250px;
+}
+
+.dashboard button {
+    margin: 10px;
+    width: 300px;
+}
+
+.dashboard button:hover {
+    margin: 10px;
+    width: 300px;
 }
 
 .painel-principal {
@@ -31,6 +54,7 @@ h2 {
     border: 1px solid gray;
     border-radius: 20px;
     padding: 10px;
+    margin-bottom: 10px;
 }
 
 .painel-secundario ul {
@@ -93,7 +117,7 @@ input {
 
 .debito-credito {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: left;
+    justify-content: flex-start;
     flex-direction: column;
 }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "../styles/sidebar.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify'
 
 function Sidebar({...props}) {
   const nav = useNavigate();
@@ -9,6 +10,7 @@ function Sidebar({...props}) {
 
     window.sessionStorage.clear();
     nav("/");
+    toast.success("Obrigado por utilizar o Pocket+ !")
   }
 
   return (
@@ -16,10 +18,13 @@ function Sidebar({...props}) {
       <nav>
         <ul>
           <li>
-            <Link to="/Home">Home</Link>
+            <Link to="/Receita">Receitas</Link>
           </li>
           <li>
-            <Link to="/Relatorio">Relatório</Link>
+          <Link to="/Despesa">Despesas</Link>
+          </li>
+          <li>
+          <Link to="/Relatorio">Relatório</Link>
           </li>
         </ul>
       </nav>
