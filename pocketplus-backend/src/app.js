@@ -20,10 +20,12 @@ import publicaRouter from './routes/publicaRoutes.js';
 import transacaoRouter from './routes/transacaoRoutes.js';
 import usuarioRouter from './routes/usuarioRoutes.js';
 import valorRouter from './routes/valorRoutes.js'
+import receitaRouter from './routes/receitaRoutes.js'
 
 app.use("/", publicaRouter);
 app.use("/transacao", transacaoRouter);
 app.use("/usuario", usuarioRouter);
 app.use("/despesas", valorRouter);
+app.use("/receitas", receitaRouter);
 
 export default app;

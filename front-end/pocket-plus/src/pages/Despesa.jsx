@@ -41,32 +41,35 @@ function Despesa() {
 
   const handleLancamento = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:5000/transacao", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: window.sessionStorage.getItem("token"),
-        },
-        body: JSON.stringify(transacaoData),
-      });
-
-      if(transacaoData.valor < 0) {
-        toast.warning("O valor digitado não pode ser negativo!");
-
-        return;
+    
+    if(transacaoData.valor > 0) {
+      try {
+        const response = await fetch("http://localhost:5000/transacao", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: window.sessionStorage.getItem("token"),
+          },
+          body: JSON.stringify(transacaoData),
+        });
+        
+  
+        if (response.status === 201) {
+          toast.success("Transação cadastrada com sucesso!");
+        } else {
+          const data = await response.json();
+          toast.warning(`Ops, tivemos um problema: ${data.error}`);
+        }
+      } catch (error) {
+        console.log("Registration error:", error);
+        toast.warning("Falha no sistema!");
       }
+      
+    } else {
 
-      if (response.status === 201) {
-        toast.success("Transação cadastrada com sucesso!");
-      } else {
-        const data = await response.json();
-        toast.warning(`Ops, tivemos um problema: ${data.error}`);
-      }
-    } catch (error) {
-      console.log("Registration error:", error);
-      toast.warning("Falha no sistema!");
+      toast.warning("O valor digitado não pode ser negativo!");
+      
+      return;
     }
   };
 
@@ -85,7 +88,7 @@ function Despesa() {
           }}
         >
           <br />
-          <h2>Novo Lançamento</h2>
+          <h2>Cadastrar Nova Despesa</h2>
           <div className="painel-principal">
             <div className="painel1">
               <input

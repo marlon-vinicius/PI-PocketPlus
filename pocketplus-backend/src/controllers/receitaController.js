@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 const controller = {};
 
-controller.criarTransacao = async function (req, res) {
+controller.criarReceita = async function (req, res) {
   try {
     const { data, tipo, categoria, descricao } = req.body;
     
@@ -11,7 +11,7 @@ controller.criarTransacao = async function (req, res) {
 
     const usuarioId = req.usuario.user_id;
 
-    await prisma.transacao.create({
+    await prisma.receita.create({
       data: {
         usuarioId,
         data,
@@ -31,7 +31,7 @@ controller.criarTransacao = async function (req, res) {
 
 controller.ultimas = async function(req, res) {
   try {
-    const result = await prisma.transacao.findMany({
+    const result = await prisma.receita.findMany({
       where: { usuarioId: req.usuario.user_id },
       take: 5
     })
@@ -51,7 +51,7 @@ controller.ultimas = async function(req, res) {
 
 controller.todas = async function(req, res) {
   try {
-    const result = await prisma.transacao.findMany({
+    const result = await prisma.receita.findMany({
       where: { usuarioId: req.usuario.user_id },
       orderBy: { categoria: 'desc' }
 
@@ -78,7 +78,7 @@ controller.filtradas = async function(req, res) {
       return;
     }
 
-    const result = await prisma.transacao.findMany({
+    const result = await prisma.receita.findMany({
       where: {
         usuarioId: req.usuario.user_id,
         categoria: categoriaSelecionada,

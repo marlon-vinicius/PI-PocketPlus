@@ -54,8 +54,8 @@ function Relatorio() {
 
     if (response.status === 200) {
       const retorno = await response.json();
-      if (retorno === 0) {
-        toast.warning(`Nenhum dado correspondente encontrado.`);
+      if (retorno === 0 || retorno === null || retorno === undefined || retorno === '') {
+        return toast.warning(`Nenhum dado correspondente encontrado.`);
       }
       setTransacoes(retorno);
     } else {
