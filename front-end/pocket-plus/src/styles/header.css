@@ -6,8 +6,11 @@
 }
 
 .header {
-    background-color: lightgrey;
+    background-color: #1fad2b;
     box-shadow: 4px 4px 5px gray;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .header img {

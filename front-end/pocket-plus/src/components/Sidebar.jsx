@@ -1,27 +1,55 @@
-import '../styles/sidebar.css'
+import { Link } from "react-router-dom";
+import "../styles/sidebar.css";
+import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify'
 
-function Sidebar () {
+function Sidebar({...props}) {
+  const nav = useNavigate();
+  async function logout(e) {
+    e.preventDefault();
 
-    return(
+    window.sessionStorage.clear();
+    nav("/");
+    toast.success("Obrigado por utilizar o Pocket+ !")
+  }
 
-        <div className="sidebar">
-            <nav>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Inserir</a></li>
-                    <li><a href="#">Relatório</a></li>
-                </ul>
-            </nav>
+  return (
+    <div className="sidebar">
+      <nav>
+        <ul>
+          <li>
+            <Link to="/Receita">Receitas</Link>
+          </li>
+          <li>
+          <Link to="/Despesa">Despesas</Link>
+          </li>
+          <li>
+          <Link to="/Relatorio">Relatório</Link>
+          </li>
+        </ul>
+      </nav>
 
-            <nav>
-                <ul>
-                    <li><p>Ganhos</p></li>
-                    <li><p>Despesas</p></li>
-                    <li><p>Total</p></li>
-                </ul>
-            </nav>
-        </div>
-    )
+      <nav>
+        <ul>
+          <li>
+            <p>Ganhos</p>
+          </li>
+          <li>
+            <p>{props.valor}</p>
+          </li>
+          <li>
+            <p>Total</p>
+          </li>
+          <hr />
+          <li>
+            <p>
+              <button onClick={logout}>Logout</button>
+            </p>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
 }
 
 export default Sidebar;

@@ -1,0 +1,56 @@
+// Executar `npx prisma generate` toda vez que modificar o schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum CategoriaDespesa {
+  Moradia
+  Alimentacao
+  Lazer
+  Transporte
+  Saude
+}
+
+enum CategoriaReceita {
+  Pagamento
+  Quinzena
+  Outros
+}
+
+model Usuario {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  nome       String
+  profissao  String
+  email      String      @unique
+  senha      String
+  transacoes Transacao[]
+  receitas   Receita[]
+}
+
+model Transacao {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  categoria CategoriaDespesa
+  tipo      String
+  descricao String?
+  valor     Float
+  data      String
+  usuarioId String    @db.ObjectId
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
+}
+
+model Receita {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  categoria CategoriaReceita
+  tipo      String
+  descricao String?
+  valor     Float
+  data      String
+  usuarioId String    @db.ObjectId
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
+}
