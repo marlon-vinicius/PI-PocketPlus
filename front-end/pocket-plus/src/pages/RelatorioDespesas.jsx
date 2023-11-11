@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import "../styles/relatorio.css";
 import { toast } from "react-toastify";
 
-function Relatorio() {
+function RelatorioDespesas() {
   const [transacoes, setTransacoes] = useState([]);
   const [valor, setValor] = useState(0);
 
@@ -58,7 +58,7 @@ function Relatorio() {
       <div style={{ display: "flex" }}>
         <Sidebar valor={valor} />
         <div className="pai">
-          <h2>Histórico de Lançamentos</h2>
+          <h2>Histórico de Lançamentos de Despesas</h2>
 
           <div className="pesquisa">
             Filtrar por:
@@ -112,4 +112,4 @@ function Relatorio() {
   );
 }
 
-export default Relatorio;
+export default RelatorioDespesas;

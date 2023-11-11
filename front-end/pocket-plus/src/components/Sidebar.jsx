@@ -17,14 +17,20 @@ function Sidebar({...props}) {
     <div className="sidebar">
       <nav>
         <ul>
+        <li>
+            <Link to="/Dashboard">Dashboard</Link>
+          </li>
           <li>
             <Link to="/Receita">Receitas</Link>
           </li>
           <li>
-          <Link to="/Despesa">Despesas</Link>
+            <Link to="/Despesa">Despesas</Link>
           </li>
           <li>
-          <Link to="/Relatorio">Relatório</Link>
+            <Link to="/RelatorioReceitas">Relatório Receitas</Link>
+          </li>
+          <li>
+            <Link to="/RelatorioDespesas">Relatório Despesas</Link>
           </li>
         </ul>
       </nav>

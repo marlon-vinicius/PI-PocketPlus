@@ -5,7 +5,8 @@ import PrivateRoutes from "./guard/guard.jsx";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Despesa from "./pages/Despesa";
-import Relatorio from "./pages/Relatorio";
+import RelatorioDespesas from "./pages/RelatorioDespesas";
+import RelatorioReceitas from "./pages/RelatorioReceitas";
 import Dashboard from "./pages/Dashboard.jsx";
 import Receita from './pages/Receita.jsx'
 import Error from "./pages/Error";
@@ -19,7 +20,8 @@ function RoutesApp() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/receita" element={<Receita />} />
           <Route path="/despesa" element={<Despesa />} />
-          <Route path="/relatorio" element={<Relatorio />} />
+          <Route path="/RelatorioDespesas" element={<RelatorioDespesas />} />
+          <Route path="/RelatorioReceitas" element={<RelatorioReceitas />} />
 
         </Route>
 
