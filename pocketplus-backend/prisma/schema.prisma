@@ -9,12 +9,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Categoria {
+enum CategoriaDespesa {
   Moradia
   Alimentacao
   Lazer
   Transporte
   Saude
+}
+
+enum CategoriaReceita {
+  Pagamento
+  Quinzena
+  Outros
 }
 
 model Usuario {
@@ -24,11 +30,23 @@ model Usuario {
   email      String      @unique
   senha      String
   transacoes Transacao[]
+  receitas   Receita[]
 }
 
 model Transacao {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  categoria Categoria
+  categoria CategoriaDespesa
+  tipo      String
+  descricao String?
+  valor     Float
+  data      String
+  usuarioId String    @db.ObjectId
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
+}
+
+model Receita {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  categoria CategoriaReceita
   tipo      String
   descricao String?
   valor     Float

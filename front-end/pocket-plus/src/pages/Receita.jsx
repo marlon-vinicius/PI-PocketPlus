@@ -41,32 +41,35 @@ function Receita() {
 
   const handleLancamento = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:5000/transacao", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: window.sessionStorage.getItem("token"),
-        },
-        body: JSON.stringify(receitaData),
-      });
-
-      if(receitaData.valor < 0) {
-        toast.warning("O valor digitado não pode ser negativo!");
-
-        return;
+    
+    if(receitaData.valor > 0) {
+      try {
+        const response = await fetch("http://localhost:5000/receitas", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: window.sessionStorage.getItem("token"),
+          },
+          body: JSON.stringify(receitaData),
+        });
+        
+  
+        if (response.status === 201) {
+          toast.success("Transação cadastrada com sucesso!");
+        } else {
+          const data = await response.json();
+          toast.warning(`Ops, tivemos um problema: ${data.error}`);
+        }
+      } catch (error) {
+        console.log("Registration error:", error);
+        toast.warning("Falha no sistema!");
       }
+      
+    } else {
 
-      if (response.status === 201) {
-        toast.success("Receita cadastrada com sucesso!");
-      } else {
-        const data = await response.json();
-        toast.warning(`Ops, tivemos um problema: ${data.error}`);
-      }
-    } catch (error) {
-      console.log("Registration error:", error);
-      toast.warning("Falha no sistema!");
+      toast.warning("O valor digitado não pode ser negativo!");
+      
+      return;
     }
   };
 
@@ -85,7 +88,7 @@ function Receita() {
           }}
         >
           <br />
-          <h2>Novo Lançamento</h2>
+          <h2>Cadastrar Nova Receita</h2>
           <div className="painel-principal">
             <div className="painel1">
               <input
@@ -112,6 +115,28 @@ function Receita() {
                     onChange={handleInputChange}
                   />
                   <label htmlFor="pix">Pix</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="transferencia"
+                    name="tipo"
+                    value="Transferencia"
+                    checked={receitaData.tipo === "Transferencia"}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="transferencia">Transferência</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="deposito"
+                    name="tipo"
+                    value="Deposito"
+                    checked={receitaData.tipo === "Deposito"}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="deposito">Depósito</label>
                 </div>
                 <div>
                   <input
