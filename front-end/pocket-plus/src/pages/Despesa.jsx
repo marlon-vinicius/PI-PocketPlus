@@ -127,6 +127,28 @@ function Despesa() {
                   />
                   <label htmlFor="credito">Crédito</label>
                 </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="dinheiro"
+                    name="tipo"
+                    value="Dinheiro"
+                    checked={transacaoData.tipo === "Dinheiro"}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="dinheiro">Dinheiro</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="pix"
+                    name="tipo"
+                    value="Pix"
+                    checked={transacaoData.tipo === "Pix"}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="pix">Pix</label>
+                </div>
               </div>
 
               <select

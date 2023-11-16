@@ -3,11 +3,13 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import "../styles/relatorio.css";
 import { toast } from "react-toastify";
+import { TiDelete } from 'react-icons/ti'
+import { BiSolidPencil } from 'react-icons/bi'
 
 function RelatorioDespesas() {
   const [transacoes, setTransacoes] = useState([]);
   const [valor, setValor] = useState(0);
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState("Moradia");
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
 
   const carregarTodosLancamentos = async () => {
     const response = await fetch("http://localhost:5000/transacao/todas", {
@@ -64,6 +66,14 @@ function RelatorioDespesas() {
     }
   };
 
+  function handleEdit() {
+
+  }
+
+  function handleDelete() {
+    
+  }
+
   return (
     <>
       <Header />
@@ -99,6 +109,8 @@ function RelatorioDespesas() {
                   <th>Tipo</th>
                   <th>Descrição</th>
                   <th>Valor</th>
+                  <th>Editar</th>
+                  <th>Excluir</th>
                 </tr>
                 {transacoes.map((item, index) => (
                   <tr key={index}>
@@ -113,6 +125,8 @@ function RelatorioDespesas() {
                     <td>{item.tipo}</td>
                     <td>{item.descricao}</td>
                     <td>{"R$ " + item.valor}</td>
+                    <td className="icones" onClick={handleEdit}><BiSolidPencil /></td>
+                    <td className="icones" onClick={handleDelete}><TiDelete /></td>
                   </tr>
                 ))}
               </table>

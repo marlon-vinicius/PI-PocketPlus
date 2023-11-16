@@ -38,10 +38,10 @@ function Sidebar({...props}) {
       <nav>
         <ul>
           <li>
-            <p>Ganhos</p>
+            <p>{props.valorRecebido}</p>
           </li>
           <li>
-            <p>{props.valor}</p>
+            <p>{props.valorGasto}</p>
           </li>
           <li>
             <p>Total</p>

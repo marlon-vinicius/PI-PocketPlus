@@ -89,7 +89,7 @@ controller.filtradas = async function(req, res) {
     if (result.length > 0) {
       res.send(result);
     } else {
-      toast.warning(`Nenhum dado correspondente encontrado para a categoria selecionada.`);
+      toast.warning('Nenhum dado correspondente encontrado para a categoria selecionada.');
       res.status(404);
     }
   } catch (error) {

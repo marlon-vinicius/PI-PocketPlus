@@ -2,7 +2,7 @@ import prisma from '../database/client.js';
 
 const controller = {};
 
-controller.porId = async function (req,res){
+controller.porId = async function (req, res){
   
   const id = req.params.id;
 

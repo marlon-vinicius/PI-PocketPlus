@@ -4,12 +4,16 @@ import Sidebar from "../components/Sidebar";
 import "../styles/relatorio.css";
 import { toast } from "react-toastify";
 
+import { TiDelete } from 'react-icons/ti'
+import { BiSolidPencil } from 'react-icons/bi'
+
 function RelatorioReceitas() {
   const [transacoes, setTransacoes] = useState([]);
   const [valor, setValor] = useState(0);
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
 
   const carregarTodosLancamentos = async () => {
-    const response = await fetch("http://localhost:5000/transacao/todas", {
+    const response = await fetch("http://localhost:5000/receitas/todas", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -34,14 +38,22 @@ function RelatorioReceitas() {
     }
   };
 
+  const handleSelecionarCategoria = (e) => {
+    setCategoriaSelecionada(e.target.value);
+  };
+
   const carregarFiltrados = async () => {
-    const response = await fetch("http://localhost:5000/transacao/filtradas", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: window.sessionStorage.getItem("token"),
-      },
-    });
+    setTransacoes([]);
+    const response = await fetch(
+      `http://localhost:5000/receitas/filtradas?categoria=${categoriaSelecionada}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: window.sessionStorage.getItem("token"),
+        },
+      }
+    );
 
     if (response.status === 200) {
       const retorno = await response.json();
@@ -51,6 +63,14 @@ function RelatorioReceitas() {
       toast.warning(`Ops, tivemos um problema: ${data.error}`);
     }
   };
+
+  function handleEdit() {
+
+  }
+
+  function handleDelete() {
+    
+  }
 
   return (
     <>
@@ -64,7 +84,7 @@ function RelatorioReceitas() {
             Filtrar por:
             <br />
             <br />
-            <select>
+            <select value ={categoriaSelecionada} onChange={handleSelecionarCategoria}>
               <option value="">Categoria</option>
               <option value="Pagamento">Pagamento</option>
               <option value="Quinzena">Quinzena</option>
@@ -85,6 +105,8 @@ function RelatorioReceitas() {
                   <th>Tipo</th>
                   <th>Descrição</th>
                   <th>Valor</th>
+                  <th>Editar</th>
+                  <th>Excluir</th>
                 </tr>
                 {transacoes.map((item, index) => (
                   <tr key={index}>
@@ -99,6 +121,8 @@ function RelatorioReceitas() {
                     <td>{item.tipo}</td>
                     <td>{item.descricao}</td>
                     <td>{"R$ " + item.valor}</td>
+                                        <td className="icones" onClick={handleEdit}><BiSolidPencil /></td>
+                    <td className="icones" onClick={handleDelete}><TiDelete /></td>
                   </tr>
                 ))}
               </table>
