@@ -9,8 +9,9 @@ import { BiSolidPencil } from 'react-icons/bi'
 
 function RelatorioReceitas() {
   const [transacoes, setTransacoes] = useState([]);
-  const [valor, setValor] = useState(0);
+  const [totalRecebido, setTotalRecebido] = useState(0);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
+  const [receitaEditada, setReceitaEditada] = useState(null);
 
   const carregarTodosLancamentos = async () => {
     const response = await fetch("http://localhost:5000/receitas/todas", {
@@ -22,15 +23,14 @@ function RelatorioReceitas() {
     });
 
     if (response.status === 200) {
-      let valorDespesas = 0;
 
       const retorno = await response.json();
 
-      retorno.map((val) => {
-        return setValor(valorDespesas += val.valor);
-      });
+      const total = retorno.reduce((acc, transacao) => acc + transacao.valor, 0);
+  setTotalRecebido(total);
 
-      
+  setTransacoes(retorno);
+
       return setTransacoes(retorno);
     } else {
       const data = await response.json();
@@ -43,40 +43,114 @@ function RelatorioReceitas() {
   };
 
   const carregarFiltrados = async () => {
-    setTransacoes([]);
-    const response = await fetch(
-      `http://localhost:5000/receitas/filtradas?categoria=${categoriaSelecionada}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: window.sessionStorage.getItem("token"),
-        },
-      }
-    );
 
-    if (response.status === 200) {
+    setTransacoes([]);
+    try {
+
+      const response = await fetch(
+        `http://localhost:5000/receitas/filtradas?categoria=${categoriaSelecionada}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: window.sessionStorage.getItem("token"),
+          },
+        }
+      );
+  
+      if (response.status === 404) {
+        toast.warning("Nenhuma despesa ou receita encontrada para a categoria selecionada.");
+        return;
+      }
+  
+      if (!response.ok) {
+        throw new Error(`Erro na solicitação: ${response.status} - ${response.statusText}`);
+      }
+  
       const retorno = await response.json();
-      return setTransacoes(retorno);
-    } else {
-      const data = await response.json();
-      toast.warning(`Ops, tivemos um problema: ${data.error}`);
+
+      const total = retorno.reduce((acc, transacao) => acc + transacao.valor, 0);
+  setTotalRecebido(total);
+
+  setTransacoes(retorno);
+
+  
+      if (retorno.length === 0) {
+        toast.warning("Nenhuma despesa ou receita encontrada para a categoria selecionada.");
+        setTotalRecebido(0);
+        return;
+      }
+  
+      setTransacoes(retorno);
+    } catch (error) {
+      console.error("Erro ao carregar transações filtradas:", error.message);
+      toast.warning("Falha ao carregar transações filtradas.");
     }
   };
 
-  function handleEdit() {
+  const handleEdit = (receita) => {
+    setReceitaEditada(receita);
+  };
 
-  }
+  const handleUpdate = async (receita) => {
+    try {
+      const response = await fetch(`http://localhost:5000/receitas/${receita.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: window.sessionStorage.getItem('token'),
+        },
+        body: JSON.stringify(receita),
+      });
+  
+      if (response.status === 200) {
+        toast.success('Receita atualizada com sucesso!');
+        carregarTodosLancamentos();
+        setReceitaEditada(null); // Limpa o estado de edição
+      } else {
+        const data = await response.json();
+        toast.error(`Ops, tivemos um problema: ${data.error}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  function handleDelete() {
-    
-  }
+  const handleDelete = async (receitaClicada) => {
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/receitas/${receitaClicada}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: window.sessionStorage.getItem("token"),
+          },
+        }
+      );
+  
+      if (response.status === 204) {
+        toast.success('Receita deletada com sucesso!');
+        carregarTodosLancamentos();
+      } else if (response.status === 404) {
+        toast.warning('Receita não encontrada.');
+      } else {
+        const data = await response.json();
+        toast.warning(`Ops, tivemos um problema: ${data.error}`);
+      }
+    } catch (error) {
+
+      console.error(error);
+
+    }
+  };
 
   return (
     <>
       <Header />
       <div style={{ display: "flex" }}>
-        <Sidebar valor={valor} />
+        <Sidebar />
         <div className="pai">
           <h2>Histórico de Lançamentos de Receitas</h2>
 
@@ -120,12 +194,90 @@ function RelatorioReceitas() {
                     <td>{item.categoria}</td>
                     <td>{item.tipo}</td>
                     <td>{item.descricao}</td>
-                    <td>{"R$ " + item.valor}</td>
-                                        <td className="icones" onClick={handleEdit}><BiSolidPencil /></td>
-                    <td className="icones" onClick={handleDelete}><TiDelete /></td>
+                    <td>{"R$ " + item.valor.toFixed(2)}</td>
+                    <td>
+                      {receitaEditada && receitaEditada.id === item.id ? (
+                        // Formulário de edição
+                        <div>
+                          <span>Categoria: </span>
+                          <input
+                            type="text"
+                            value={receitaEditada.categoria}
+                            onChange={(e) =>
+                              setReceitaEditada({
+                                ...receitaEditada,
+                                categoria: e.target.value,
+                              })
+                            }
+                          /><br />
+                          <span>Data: </span>
+                          <input
+                            type="date"
+                            value={receitaEditada.data}
+                            onChange={(e) =>
+                              setReceitaEditada({
+                                ...receitaEditada,
+                                data: e.target.value,
+                              })
+                            }
+                          /><br />
+                          <span>Valor :</span>
+                          <input
+                            type="number"
+                            value={receitaEditada.valor}
+                            onChange={(e) =>
+                              setReceitaEditada({
+                                ...receitaEditada,
+                                valor: e.target.value,
+                              })
+                            }
+                          /><br />
+                          <span>Descrição: </span>
+                          <input
+                            type="text"
+                            value={receitaEditada.descricao}
+                            onChange={(e) =>
+                              setReceitaEditada({
+                                ...receitaEditada,
+                                descricao: e.target.value,
+                              })
+                            }
+                          /><br />
+                          <span>Tipo: </span>
+                          <input
+                            type="text"
+                            value={receitaEditada.tipo}
+                            onChange={(e) =>
+                              setReceitaEditada({
+                                ...receitaEditada,
+                                tipo: e.target.value,
+                              })
+                            }
+                          /><br />
+                          <button
+                            onClick={() => handleUpdate(receitaEditada)}
+                          >
+                            Salvar
+                          </button>
+                          <button onClick={() => setReceitaEditada(null)}>
+                            Cancelar
+                          </button>
+                        </div>
+                      ) : (
+                    <td className="icones" onClick={() => handleEdit(item)}>
+                      <BiSolidPencil />
+                    </td>
+                        
+                      )}
+                    </td>
+
+                    <td className="icones" onClick={() => handleDelete(item.id)}><TiDelete /></td>
                   </tr>
                 ))}
               </table>
+              <div>
+                <span>Total Recebido: R$ {totalRecebido.toFixed(2)}</span>
+              </div>
             </div>
           </div>
         </div>

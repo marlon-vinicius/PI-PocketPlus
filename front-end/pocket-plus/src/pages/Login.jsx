@@ -13,7 +13,7 @@ function Login() {
   const nav = useNavigate();
 
   const handleKeyPress = event => {
-    if(event.key === 'Enter'){
+    if(event.key === '13'){
     }
   };
 

@@ -10,18 +10,9 @@ function Dashboard() {
   
   useEffect(() => {
 
-    const obterDadosUsuario = async () => {
-      try {
-        const resposta = await fetch('http://localhost/5000/usuario/id/:id');
-        const dados = await resposta.json();
-        console.log(dados);
-        setUsuario(dados.nome);
-      } catch (erro) {
-        console.error("Erro ao obter dados do usuário", erro);
-      }
-    };
+    const name = window.sessionStorage.getItem('nomeUsuario')
+    setUsuario(name)
 
-    obterDadosUsuario();
   }, []); 
 
   return (

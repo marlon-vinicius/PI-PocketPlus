@@ -1,5 +1,5 @@
 import prisma from '../database/client.js';
-import { toast } from "react-toastify";
+
 
 const controller = {};
 
@@ -33,6 +33,7 @@ controller.ultimas = async function(req, res) {
   try {
     const result = await prisma.receita.findMany({
       where: { usuarioId: req.usuario.user_id },
+      orderBy: { data: 'desc' },
       take: 5
     })
 
@@ -86,17 +87,60 @@ controller.filtradas = async function(req, res) {
       orderBy: { data: 'desc' },
     });
 
-    if (result.length > 0) {
+    if (result.length !== 0) {
       res.send(result);
     } else {
-      toast.warning('Nenhum dado correspondente encontrado para a categoria selecionada.');
-      res.status(404);
+
+      res.status(404).json({ message: "Nenhuma despesa ou receita encontrada para a categoria selecionada." });
     }
   } catch (error) {
     console.error(error);
-    toast.warning(`Erro ao processar a solicitação.`);
+
     res.status(500).send(error);
   }
 };
+
+controller.update = async function(req, res) {
+  try {
+    const { id } = req.params;
+    const { categoria, tipo, descricao, data } = req.body;
+    const valor = Number(req.body.valor);
+
+    const updatedTransacao = await prisma.receita.update({
+      where: { id: id },
+      data: {
+        categoria: categoria,
+        tipo: tipo,
+        descricao: descricao,
+        valor: valor,
+        data: data,
+      },
+    });
+
+    res.status(200).json(updatedTransacao);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+  }
+};
+
+controller.delete = async function(req, res) {
+  try {
+    const { id } = req.params;
+
+    const result = await prisma.receita.delete({
+      where: { 
+        id: id,
+        usuarioId: req.usuario.user_id }
+      })
+
+    if(result) res.status(204).end()
+    else res.status(404).end()
+
+  } catch (error) {
+    console.error(error)
+      res.status(500).send(error)
+  }
+}
 
 export default controller;

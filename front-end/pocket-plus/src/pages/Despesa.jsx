@@ -39,7 +39,7 @@ function Despesa() {
     }
   };
 
-  const handleLancamento = async (e) => {
+  const handleLancamento = React.useCallback(async (e) => {
     e.preventDefault();
     
     if(transacaoData.valor > 0) {
@@ -56,6 +56,8 @@ function Despesa() {
   
         if (response.status === 201) {
           toast.success("Transação cadastrada com sucesso!");
+          carregarLancamentos()
+
         } else {
           const data = await response.json();
           toast.warning(`Ops, tivemos um problema: ${data.error}`);
@@ -71,7 +73,11 @@ function Despesa() {
       
       return;
     }
-  };
+  }, [transacaoData]) 
+
+  React.useEffect(() => {
+    carregarLancamentos();
+  }, [transacoes.length]);
 
   return (
     <>
@@ -98,11 +104,17 @@ function Despesa() {
                 onChange={handleInputChange}
               />
               <input
-                type='number'
+                type="number"
                 placeholder="R$ 0,00"
                 name="valor"
                 value={transacaoData.valor}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
+                onInput={(e) => {
+
+                  if (e.target.value.length > 6) {
+                    e.target.value = e.target.value.slice(0, 6);
+                  }
+                }}
               />
               <div className="debito-credito">
                 <div>
@@ -199,19 +211,18 @@ function Despesa() {
                   <th>Descrição</th>
                   <th>Valor</th>
                 </tr>
-                {transacoes.map((item) => (
-                  <tr>
+                {transacoes.map((item, index) => (
+                  <tr key={index}>
                     <td>{item.data.substring(8,10) + '/' + item.data.substring(5,7) + '/' + item.data.substring(0,4)}</td>
                     <td>{item.categoria}</td>
                     <td>{item.tipo}</td>
                     <td>{item.descricao}</td>
-                    <td>{"R$ " + item.valor}</td>
+                    <td>{"R$ " + item.valor.toFixed(2)}</td>
                   </tr>
                 ))}
               </table>
             </div>
           </div>
-          <button onClick={carregarLancamentos}>Carregar</button>
         </div>
       </div>
     </>

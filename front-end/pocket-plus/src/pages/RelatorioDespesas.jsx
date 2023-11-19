@@ -3,13 +3,14 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import "../styles/relatorio.css";
 import { toast } from "react-toastify";
-import { TiDelete } from 'react-icons/ti'
-import { BiSolidPencil } from 'react-icons/bi'
+import { TiDelete } from "react-icons/ti";
+import { BiSolidPencil } from "react-icons/bi";
 
 function RelatorioDespesas() {
   const [transacoes, setTransacoes] = useState([]);
-  const [valor, setValor] = useState(0);
+  const [totalGasto, setTotalGasto] = useState(0);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
+  const [transacaoEditada, setTransacaoEditada] = useState(null);
 
   const carregarTodosLancamentos = async () => {
     const response = await fetch("http://localhost:5000/transacao/todas", {
@@ -21,15 +22,16 @@ function RelatorioDespesas() {
     });
 
     if (response.status === 200) {
-      let valorDespesas = 0;
-
       const retorno = await response.json();
 
-      retorno.map((val) => {
-        return setValor(valorDespesas += val.valor);
-      });
+      const total = retorno.reduce(
+        (acc, transacao) => acc + transacao.valor,
+        0
+      );
+      setTotalGasto(total);
 
-      
+      setTransacoes(retorno);
+
       return setTransacoes(retorno);
     } else {
       const data = await response.json();
@@ -43,42 +45,119 @@ function RelatorioDespesas() {
 
   const carregarFiltrados = async () => {
     setTransacoes([]);
-    const response = await fetch(
-      `http://localhost:5000/transacao/filtradas?categoria=${categoriaSelecionada}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: window.sessionStorage.getItem("token"),
-        },
-      }
-    );
+    try {
+      const response = await fetch(
+        `http://localhost:5000/transacao/filtradas?categoria=${categoriaSelecionada}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: window.sessionStorage.getItem("token"),
+          },
+        }
+      );
 
-    if (response.status === 200) {
-      const retorno = await response.json();
-      if (retorno === 0 || retorno === null || retorno === undefined || retorno === '') {
-        return toast.warning(`Nenhum dado correspondente encontrado.`);
+      if (response.status === 404) {
+        toast.warning(
+          "Nenhuma despesa ou receita encontrada para a categoria selecionada."
+        );
+        return;
       }
+
+      if (!response.ok) {
+        throw new Error(
+          `Erro na solicitação: ${response.status} - ${response.statusText}`
+        );
+      }
+
+      const retorno = await response.json();
+
+      if (retorno.length === 0) {
+        toast.warning(
+          "Nenhuma despesa ou receita encontrada para a categoria selecionada."
+        );
+        setTotalGasto(0);
+        return;
+      }
+
+      const total = retorno.reduce(
+        (acc, transacao) => acc + transacao.valor,
+        0
+      );
+      setTotalGasto(total);
+
       setTransacoes(retorno);
-    } else {
-      const data = await response.json();
-      toast.warning(`Ops, tivemos um problema: ${data.error}`);
+
+      setTransacoes(retorno);
+    } catch (error) {
+      console.error("Erro ao carregar transações filtradas:", error.message);
+      toast.warning("Falha ao carregar transações filtradas.");
     }
   };
 
-  function handleEdit() {
+  const handleEdit = (transacao) => {
+    setTransacaoEditada(transacao);
+  };
 
-  }
+  const handleUpdate = async (transacao) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/transacao/${transacao.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: window.sessionStorage.getItem("token"),
+          },
+          body: JSON.stringify(transacao),
+        }
+      );
 
-  function handleDelete() {
-    
-  }
+      if (response.status === 200) {
+        toast.success("Transação atualizada com sucesso!");
+        carregarTodosLancamentos();
+        setTransacaoEditada(null); // Limpa o estado de edição
+      } else {
+        const data = await response.json();
+        toast.error(`Ops, tivemos um problema: ${data.error}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (transacaoClicada) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/transacao/${transacaoClicada}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: window.sessionStorage.getItem("token"),
+          },
+        }
+      );
+
+      if (response.status === 204) {
+        toast.success("Transação deletada com sucesso!");
+        carregarTodosLancamentos();
+      } else if (response.status === 404) {
+        toast.warning("Transação não encontrada.");
+      } else {
+        const data = await response.json();
+        toast.warning(`Ops, tivemos um problema: ${data.error}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
       <Header />
       <div style={{ display: "flex" }}>
-        <Sidebar valor={valor} />
+        <Sidebar />
         <div className="pai">
           <h2>Histórico de Lançamentos de Despesas</h2>
 
@@ -86,7 +165,10 @@ function RelatorioDespesas() {
             Filtrar por:
             <br />
             <br />
-            <select value={categoriaSelecionada} onChange={handleSelecionarCategoria}>
+            <select
+              value={categoriaSelecionada}
+              onChange={handleSelecionarCategoria}
+            >
               <option value="">Categoria</option>
               <option value="Moradia">Moradia</option>
               <option value="Alimentacao">Alimentação</option>
@@ -124,12 +206,99 @@ function RelatorioDespesas() {
                     <td>{item.categoria}</td>
                     <td>{item.tipo}</td>
                     <td>{item.descricao}</td>
-                    <td>{"R$ " + item.valor}</td>
-                    <td className="icones" onClick={handleEdit}><BiSolidPencil /></td>
-                    <td className="icones" onClick={handleDelete}><TiDelete /></td>
+                    <td>{"R$ " + item.valor.toFixed(2)}</td>
+                    <td>
+                      {transacaoEditada && transacaoEditada.id === item.id ? (
+                        // Formulário de edição
+                        <div>
+                          <span>Categoria: </span>
+                          <input
+                            type="text"
+                            value={transacaoEditada.categoria}
+                            onChange={(e) =>
+                              setTransacaoEditada({
+                                ...transacaoEditada,
+                                categoria: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          <span>Data: </span>
+                          <input
+                            type="date"
+                            value={transacaoEditada.data}
+                            onChange={(e) =>
+                              setTransacaoEditada({
+                                ...transacaoEditada,
+                                data: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          <span>Valor :</span>
+                          <input
+                            type="number"
+                            value={transacaoEditada.valor}
+                            onChange={(e) =>
+                              setTransacaoEditada({
+                                ...transacaoEditada,
+                                valor: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          <span>Descrição: </span>
+                          <input
+                            type="text"
+                            value={transacaoEditada.descricao}
+                            onChange={(e) =>
+                              setTransacaoEditada({
+                                ...transacaoEditada,
+                                descricao: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          <span>Tipo: </span>
+                          <input
+                            type="text"
+                            value={transacaoEditada.tipo}
+                            onChange={(e) =>
+                              setTransacaoEditada({
+                                ...transacaoEditada,
+                                tipo: e.target.value,
+                              })
+                            }
+                          />
+                          <br />
+                          {/* Adicione mais campos de entrada conforme necessário */}
+                          <button
+                            onClick={() => handleUpdate(transacaoEditada)}
+                          >
+                            Salvar
+                          </button>
+                          <button onClick={() => setTransacaoEditada(null)}>
+                            Cancelar
+                          </button>
+                        </div>
+                      ) : (
+                        <td className="icones" onClick={() => handleEdit(item)}>
+                          <BiSolidPencil />
+                        </td>
+                      )}
+                    </td>
+                    <td
+                      className="icones"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      <TiDelete />
+                    </td>
                   </tr>
                 ))}
               </table>
+              <div>
+                <span>Total Gasto: R$ {totalGasto.toFixed(2)}</span>
+              </div>
             </div>
           </div>
         </div>
