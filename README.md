@@ -1,6 +1,3 @@
-# PI-PocketPlus
-Repositório destinado ao projeto do PI do 3° semestre DSM. 
-
 <br id="topo">
 <p align="center"> <img height="400" width="400" src="./docs/Logo_Pocket-removebg.png" /></p>
 
